@@ -1,5 +1,17 @@
 [
   {
+    "id": "3aee9b9c-4501-4d86-b4bb-d12d53a5b977",
+    "source": "manual-test",
+    "symbol": "SOL",
+    "action": "BUY",
+    "timeframe": "5",
+    "strategy": "alias-final-smoke",
+    "price": 123.45,
+    "message": "alias final smoke test",
+    "confidence": 0.77,
+    "received_at": "2026-04-03T19:40:42.706Z"
+  },
+  {
     "id": "04576dd5-b825-48e4-ab88-f5bfa01f4671",
     "source": "manual-test",
     "symbol": "BTC",

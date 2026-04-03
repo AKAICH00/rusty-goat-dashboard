@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "id": "04576dd5-b825-48e4-ab88-f5bfa01f4671",
+    "source": "manual-test",
+    "symbol": "BTC",
+    "action": "BUY",
+    "timeframe": "15",
+    "strategy": "subagent-smoke",
+    "price": 71234.56,
+    "message": "smoke test",
+    "confidence": 0.99,
+    "received_at": "2026-04-03T19:40:11.181Z"
+  }
+]

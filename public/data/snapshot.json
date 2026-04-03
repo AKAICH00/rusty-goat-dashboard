@@ -1,24 +1,24 @@
 {
-  "updated_at": "2026-04-03T18:00:00Z",
+  "updated_at": "2026-04-03T19:05:45.861074+00:00",
   "strategies": [
     {
       "id": "s1",
-      "name": "S1 — Momentum Breakout",
+      "name": "S1 \u2014 Momentum Breakout",
       "thesis": "Ride breakouts using price patterns",
       "status": "live",
       "verdict": "kill",
       "metrics_1x": {
-        "portfolio_value": 10033,
-        "return_pct": 0.33,
-        "realized_pnl": 32.79,
-        "trade_count": 1715,
-        "win_rate": 0.4297,
-        "avg_r_multiple": 0
+        "portfolio_value": 10034.59,
+        "return_pct": 0.35,
+        "realized_pnl": 34.59,
+        "trade_count": 1724,
+        "win_rate": 0.4298,
+        "avg_r_multiple": 0.0
       }
     },
     {
       "id": "s2",
-      "name": "S2 — Order Book Imbalance",
+      "name": "S2 \u2014 Order Book Imbalance",
       "thesis": "Front-run order flow microstructure",
       "status": "live",
       "verdict": "watch",
@@ -26,7 +26,7 @@
     },
     {
       "id": "s3",
-      "name": "S3 — Fibonacci + Harmonics",
+      "name": "S3 \u2014 Fibonacci + Harmonics",
       "thesis": "Trade at Fibonacci structure levels",
       "status": "validating",
       "verdict": "promising",
@@ -36,36 +36,40 @@
   "paper_portfolios": {
     "1x": {
       "leverage": 1,
-      "portfolio_value": 10033,
-      "realized_pnl": 32.79,
-      "trade_count": 1715,
-      "win_rate": 0.4297,
-      "avg_r_multiple": 0,
-      "signals": 8940
+      "portfolio_value": 10034.59,
+      "realized_pnl": 34.59,
+      "trade_count": 1724,
+      "win_rate": 0.4298,
+      "avg_r_multiple": 0.0,
+      "signals": 8980
     },
     "5x": {
       "leverage": 5,
-      "portfolio_value": 9800,
-      "realized_pnl": -200,
-      "trade_count": 1715,
-      "win_rate": 0.43,
-      "avg_r_multiple": -0.01,
-      "signals": 8940
+      "portfolio_value": 10038.94,
+      "realized_pnl": 38.94,
+      "trade_count": 1724,
+      "win_rate": 0.4304,
+      "avg_r_multiple": 0.0,
+      "signals": 8980
     },
     "10x": {
       "leverage": 10,
-      "portfolio_value": 9400,
-      "realized_pnl": -600,
-      "trade_count": 1715,
-      "win_rate": 0.43,
-      "avg_r_multiple": -0.02,
-      "signals": 8940
+      "portfolio_value": 9748.87,
+      "realized_pnl": -251.13,
+      "trade_count": 1724,
+      "win_rate": 0.4304,
+      "avg_r_multiple": -0.0,
+      "signals": 8980
     }
   },
   "infrastructure": {
     "running_pods": 9,
-    "last_signal_time": "2026-04-03T18:45:00Z",
-    "candles_collected": 10000,
-    "data_sources": ["OHLCV", "L2 Order Book", "Funding Rates"]
+    "last_signal_time": "2026-04-03T19:05:26+00:00",
+    "candles_collected": 10095,
+    "data_sources": [
+      "OHLCV",
+      "L2 Order Book",
+      "Funding Rates"
+    ]
   }
 }

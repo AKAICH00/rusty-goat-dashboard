@@ -44,6 +44,8 @@ type Snapshot = {
   };
 };
 
+const tradingViewSignalsFilePath = path.join(process.cwd(), "public", "data", "tv_signals.json");
+
 const currency = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -55,10 +57,49 @@ const compactNumber = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 1,
 });
 
+const signalTimestampFormatter = new Intl.DateTimeFormat("en-US", {
+  dateStyle: "medium",
+  timeStyle: "short",
+  timeZone: "UTC",
+});
+
+const signalPriceFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 2,
+});
+
+type TradingViewSignal = {
+  id: string;
+  source: string;
+  symbol: string;
+  action: string;
+  timeframe: string | null;
+  strategy: string | null;
+  price: number | null;
+  message: string | null;
+  confidence: number | null;
+  received_at: string;
+};
+
 async function getSnapshot(): Promise<Snapshot> {
   const filePath = path.join(process.cwd(), "public", "data", "snapshot.json");
   const raw = await fs.readFile(filePath, "utf8");
   return JSON.parse(raw) as Snapshot;
+}
+
+async function getTradingViewSignals(): Promise<TradingViewSignal[]> {
+  try {
+    const raw = await fs.readFile(tradingViewSignalsFilePath, "utf8");
+    const parsed = JSON.parse(raw) as TradingViewSignal[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return [];
+    }
+
+    throw error;
+  }
 }
 
 function fmtPercent(value: number) {
@@ -92,6 +133,35 @@ function deltaClass(value: number) {
   return value >= 0 ? "text-emerald-300" : "text-red-300";
 }
 
+function signalActionClasses(action: string) {
+  switch (action.toUpperCase()) {
+    case "BUY":
+      return "bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-500/30";
+    case "SELL":
+      return "bg-red-500/15 text-red-300 ring-1 ring-red-500/30";
+    default:
+      return "bg-amber-500/15 text-amber-300 ring-1 ring-amber-500/30";
+  }
+}
+
+function formatSignalPrice(price: number | null) {
+  if (price === null || !Number.isFinite(price)) {
+    return "—";
+  }
+
+  return signalPriceFormatter.format(price);
+}
+
+function formatSignalTimestamp(value: string) {
+  const parsedDate = new Date(value);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return value;
+  }
+
+  return signalTimestampFormatter.format(parsedDate);
+}
+
 function buildSignalSeries(portfolios: Record<string, Portfolio>): SignalPoint[] {
   const latestSignals = Math.max(...Object.values(portfolios).map((portfolio) => portfolio.signals), 0);
   const weights = [0.08, 0.19, 0.31, 0.47, 0.63, 0.81, 1];
@@ -104,9 +174,10 @@ function buildSignalSeries(portfolios: Record<string, Portfolio>): SignalPoint[]
 }
 
 export default async function Home() {
-  const snapshot = await getSnapshot();
+  const [snapshot, tradingViewSignals] = await Promise.all([getSnapshot(), getTradingViewSignals()]);
   const portfolios = Object.entries(snapshot.paper_portfolios);
   const signalSeries = buildSignalSeries(snapshot.paper_portfolios);
+  const recentTradingViewSignals = tradingViewSignals.slice(0, 6);
   const updatedAt = new Date(snapshot.updated_at);
   const lastSignal = snapshot.infrastructure.last_signal_time === "unknown" ? null : new Date(snapshot.infrastructure.last_signal_time);
 
@@ -279,6 +350,60 @@ export default async function Home() {
             <p className="mt-3 text-sm text-gray-400">Static JSON is rebuilt from hub snapshots and published via GitHub → Vercel.</p>
           </article>
         </section>
+
+        <section className="rounded-3xl border border-white/10 bg-gray-950/70 p-5 shadow-lg shadow-black/10 sm:p-6">
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-medium uppercase tracking-[0.24em] text-[#f7931a]">TradingView signals</p>
+            <h2 className="text-2xl font-semibold">Recent webhook activity</h2>
+            <p className="max-w-2xl text-sm text-gray-400">
+              Latest indicator alerts received by <span className="font-mono text-gray-300">/api/tv-signal</span> and reflected in the dashboard feed.
+            </p>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {recentTradingViewSignals.length > 0 ? (
+              recentTradingViewSignals.map((signal) => (
+                <article key={signal.id} className="rounded-3xl border border-white/10 bg-black/20 p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.2em] text-gray-400">{signal.source}</p>
+                      <h3 className="mt-2 text-2xl font-semibold text-white">{signal.symbol}</h3>
+                    </div>
+                    <span className={`inline-flex rounded-full px-3 py-1 text-xs font-medium uppercase ${signalActionClasses(signal.action)}`}>
+                      {signal.action}
+                    </span>
+                  </div>
+
+                  <dl className="mt-5 grid gap-3 text-sm">
+                    <div>
+                      <dt className="text-gray-400">Strategy</dt>
+                      <dd className="mt-1 text-gray-100">{signal.strategy || "—"}</dd>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <dt className="text-gray-400">Timeframe</dt>
+                        <dd className="mt-1 text-gray-100">{signal.timeframe || "—"}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-gray-400">Price</dt>
+                        <dd className="mt-1 text-gray-100">{formatSignalPrice(signal.price)}</dd>
+                      </div>
+                    </div>
+                    <div>
+                      <dt className="text-gray-400">Received at</dt>
+                      <dd className="mt-1 text-gray-100">{formatSignalTimestamp(signal.received_at)}</dd>
+                    </div>
+                  </dl>
+                </article>
+              ))
+            ) : (
+              <div className="rounded-3xl border border-dashed border-white/10 bg-black/20 p-6 text-sm text-gray-300 md:col-span-2 xl:col-span-3">
+                No TradingView signals yet — connect your first indicator!
+              </div>
+            )}
+          </div>
+        </section>
+
       </div>
     </main>
   );

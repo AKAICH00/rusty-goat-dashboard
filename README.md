@@ -20,6 +20,12 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## TradingView Webhooks
+
+TradingView alerts can post JSON payloads to `/api/tv-signal` and the dashboard will surface recent signals from `public/data/tv_signals.json`.
+
+If `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are not set, the webhook route falls back to GitHub contents storage using `GITHUB_TOKEN`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

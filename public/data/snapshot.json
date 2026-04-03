@@ -1,0 +1,71 @@
+{
+  "updated_at": "2026-04-03T18:00:00Z",
+  "strategies": [
+    {
+      "id": "s1",
+      "name": "S1 — Momentum Breakout",
+      "thesis": "Ride breakouts using price patterns",
+      "status": "live",
+      "verdict": "kill",
+      "metrics_1x": {
+        "portfolio_value": 10033,
+        "return_pct": 0.33,
+        "realized_pnl": 32.79,
+        "trade_count": 1715,
+        "win_rate": 0.4297,
+        "avg_r_multiple": 0
+      }
+    },
+    {
+      "id": "s2",
+      "name": "S2 — Order Book Imbalance",
+      "thesis": "Front-run order flow microstructure",
+      "status": "live",
+      "verdict": "watch",
+      "metrics_1x": null
+    },
+    {
+      "id": "s3",
+      "name": "S3 — Fibonacci + Harmonics",
+      "thesis": "Trade at Fibonacci structure levels",
+      "status": "validating",
+      "verdict": "promising",
+      "metrics_1x": null
+    }
+  ],
+  "paper_portfolios": {
+    "1x": {
+      "leverage": 1,
+      "portfolio_value": 10033,
+      "realized_pnl": 32.79,
+      "trade_count": 1715,
+      "win_rate": 0.4297,
+      "avg_r_multiple": 0,
+      "signals": 8940
+    },
+    "5x": {
+      "leverage": 5,
+      "portfolio_value": 9800,
+      "realized_pnl": -200,
+      "trade_count": 1715,
+      "win_rate": 0.43,
+      "avg_r_multiple": -0.01,
+      "signals": 8940
+    },
+    "10x": {
+      "leverage": 10,
+      "portfolio_value": 9400,
+      "realized_pnl": -600,
+      "trade_count": 1715,
+      "win_rate": 0.43,
+      "avg_r_multiple": -0.02,
+      "signals": 8940
+    }
+  },
+  "infrastructure": {
+    "running_pods": 9,
+    "last_signal_time": "2026-04-03T18:45:00Z",
+    "candles_collected": 10000,
+    "data_sources": ["OHLCV", "L2 Order Book", "Funding Rates"]
+  }
+}

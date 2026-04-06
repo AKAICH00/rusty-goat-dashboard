@@ -1,71 +1,87 @@
 {
-  "updated_at": "2026-04-03T19:05:45.861074+00:00",
+  "updated_at": "2026-04-06T05:17:16.552578+00:00",
   "strategies": [
     {
       "id": "s1",
       "name": "S1 \u2014 Momentum Breakout",
       "thesis": "Ride breakouts using price patterns",
       "status": "live",
-      "verdict": "kill",
+      "status_detail": "Paper path detected, measurement status unknown",
+      "measurement_status": "unknown",
+      "signal_stream": null,
       "metrics_1x": {
-        "portfolio_value": 10034.59,
-        "return_pct": 0.35,
-        "realized_pnl": 34.59,
-        "trade_count": 1724,
-        "win_rate": 0.4298,
+        "portfolio_value": 10118.19,
+        "return_pct": 1.18,
+        "realized_pnl": 118.19,
+        "trade_count": 3043,
+        "win_rate": 0.4009,
         "avg_r_multiple": 0.0
-      }
+      },
+      "verdict": "kill"
     },
     {
       "id": "s2",
       "name": "S2 \u2014 Order Book Imbalance",
       "thesis": "Front-run order flow microstructure",
-      "status": "live",
-      "verdict": "watch",
-      "metrics_1x": null
+      "status": "validating",
+      "status_detail": "Need at least 5 closed trades; have 2",
+      "measurement_status": "insufficient_sample",
+      "signal_stream": "rl_signals_s2",
+      "metrics_1x": {
+        "portfolio_value": 9999.86,
+        "return_pct": -0.0,
+        "realized_pnl": -0.14,
+        "trade_count": 2,
+        "win_rate": 0.5,
+        "avg_r_multiple": -0.0
+      },
+      "verdict": "watch"
     },
     {
       "id": "s3",
       "name": "S3 \u2014 Fibonacci + Harmonics",
       "thesis": "Trade at Fibonacci structure levels",
-      "status": "validating",
-      "verdict": "promising",
-      "metrics_1x": null
+      "status": "training",
+      "status_detail": "No isolated paper summary exported yet",
+      "measurement_status": "not_deployed",
+      "signal_stream": null,
+      "metrics_1x": null,
+      "verdict": "promising"
     }
   ],
   "paper_portfolios": {
     "1x": {
       "leverage": 1,
-      "portfolio_value": 10034.59,
-      "realized_pnl": 34.59,
-      "trade_count": 1724,
-      "win_rate": 0.4298,
+      "portfolio_value": 10118.19,
+      "realized_pnl": 118.19,
+      "trade_count": 3043,
+      "win_rate": 0.4009,
       "avg_r_multiple": 0.0,
-      "signals": 8980
+      "signals": 15905
     },
     "5x": {
       "leverage": 5,
-      "portfolio_value": 10038.94,
-      "realized_pnl": 38.94,
-      "trade_count": 1724,
-      "win_rate": 0.4304,
+      "portfolio_value": 10442.62,
+      "realized_pnl": 442.62,
+      "trade_count": 3043,
+      "win_rate": 0.4009,
       "avg_r_multiple": 0.0,
-      "signals": 8980
+      "signals": 15905
     },
     "10x": {
       "leverage": 10,
-      "portfolio_value": 9748.87,
-      "realized_pnl": -251.13,
-      "trade_count": 1724,
-      "win_rate": 0.4304,
-      "avg_r_multiple": -0.0,
-      "signals": 8980
+      "portfolio_value": 10494.67,
+      "realized_pnl": 494.67,
+      "trade_count": 3043,
+      "win_rate": 0.4026,
+      "avg_r_multiple": 0.0,
+      "signals": 15905
     }
   },
   "infrastructure": {
-    "running_pods": 9,
-    "last_signal_time": "2026-04-03T19:05:26+00:00",
-    "candles_collected": 10095,
+    "running_pods": 10,
+    "last_signal_time": "2026-04-06T05:16:53+00:00",
+    "candles_collected": 0,
     "data_sources": [
       "OHLCV",
       "L2 Order Book",

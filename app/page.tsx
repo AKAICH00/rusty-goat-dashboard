@@ -3,46 +3,7 @@ import path from "node:path";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { Activity, Database, RadioTower, Server } from "lucide-react";
 import { SignalActivityChart, type SignalPoint } from "@/components/signal-activity-chart";
-
-type StrategyMetrics = {
-  portfolio_value: number;
-  return_pct: number;
-  realized_pnl: number;
-  trade_count: number;
-  win_rate: number;
-  avg_r_multiple: number;
-};
-
-type Strategy = {
-  id: string;
-  name: string;
-  thesis: string;
-  status: "live" | "training" | "validating";
-  verdict: "promising" | "watch" | "kill";
-  metrics_1x: StrategyMetrics | null;
-};
-
-type Portfolio = {
-  leverage: number;
-  portfolio_value: number;
-  realized_pnl: number;
-  trade_count: number;
-  win_rate: number;
-  avg_r_multiple: number;
-  signals: number;
-};
-
-type Snapshot = {
-  updated_at: string;
-  strategies: Strategy[];
-  paper_portfolios: Record<string, Portfolio>;
-  infrastructure: {
-    running_pods: number;
-    last_signal_time: string;
-    candles_collected: number;
-    data_sources: string[];
-  };
-};
+import { getDashboardSnapshot, type Portfolio, type Strategy } from "@/lib/dashboard-data";
 
 const tradingViewSignalsFilePath = path.join(process.cwd(), "public", "data", "tv_signals.json");
 
@@ -69,6 +30,9 @@ const signalPriceFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type TradingViewSignal = {
   id: string;
   source: string;
@@ -81,12 +45,6 @@ type TradingViewSignal = {
   confidence: number | null;
   received_at: string;
 };
-
-async function getSnapshot(): Promise<Snapshot> {
-  const filePath = path.join(process.cwd(), "public", "data", "snapshot.json");
-  const raw = await fs.readFile(filePath, "utf8");
-  return JSON.parse(raw) as Snapshot;
-}
 
 async function getTradingViewSignals(): Promise<TradingViewSignal[]> {
   try {
@@ -174,7 +132,7 @@ function buildSignalSeries(portfolios: Record<string, Portfolio>): SignalPoint[]
 }
 
 export default async function Home() {
-  const [snapshot, tradingViewSignals] = await Promise.all([getSnapshot(), getTradingViewSignals()]);
+  const [{ snapshot, source }, tradingViewSignals] = await Promise.all([getDashboardSnapshot(), getTradingViewSignals()]);
   const portfolios = Object.entries(snapshot.paper_portfolios);
   const signalSeries = buildSignalSeries(snapshot.paper_portfolios);
   const recentTradingViewSignals = tradingViewSignals.slice(0, 6);
@@ -190,13 +148,14 @@ export default async function Home() {
               <p className="mb-2 text-sm font-medium uppercase tracking-[0.3em] text-[#f7931a]">Trading dashboard</p>
               <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">🐐 Rusty Goat</h1>
               <p className="mt-3 max-w-2xl text-sm text-gray-300 sm:text-base">
-                Paper trading performance, strategy health, signal flow, and infra readiness in one static dashboard.
+                Paper trading performance, strategy health, signal flow, and infra readiness in one dashboard fed from live Upstash state when available.
               </p>
             </div>
             <div className="rounded-2xl border border-[#f7931a]/30 bg-[#f7931a]/10 px-4 py-3 text-sm text-orange-100">
               <div className="text-xs uppercase tracking-[0.24em] text-[#f6b15d]">Last updated</div>
               <div className="mt-1 font-medium">{format(updatedAt, "MMM d, yyyy • h:mm a 'UTC'")}</div>
               <div className="mt-1 text-xs text-orange-200/80">{formatDistanceToNowStrict(updatedAt, { addSuffix: true })}</div>
+              <div className="mt-2 text-[11px] uppercase tracking-[0.2em] text-orange-200/70">Source: {source === "upstash" ? "live Upstash" : "static fallback"}</div>
             </div>
           </div>
         </section>
@@ -242,7 +201,7 @@ export default async function Home() {
           <article className="overflow-hidden rounded-3xl border border-white/10 bg-gray-950/70 shadow-lg shadow-black/10">
             <div className="border-b border-white/10 px-5 py-4 sm:px-6">
               <h2 className="text-xl font-semibold">Strategy scorecard</h2>
-              <p className="mt-1 text-sm text-gray-400">S1 is live with current 1x paper metrics; S2 and S3 are staged for review.</p>
+              <p className="mt-1 text-sm text-gray-400">Per-strategy rows now reflect isolated paper results when available, and truthful runtime status when they are not yet statistically measured.</p>
             </div>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-white/10 text-sm">
@@ -250,6 +209,7 @@ export default async function Home() {
                   <tr>
                     <th className="px-5 py-3">Strategy</th>
                     <th className="px-5 py-3">Status</th>
+                    <th className="px-5 py-3">Measurement</th>
                     <th className="px-5 py-3">Portfolio</th>
                     <th className="px-5 py-3">Return</th>
                     <th className="px-5 py-3">Win rate</th>
@@ -264,7 +224,14 @@ export default async function Home() {
                         <div className="font-medium text-gray-100">{strategy.name}</div>
                         <div className="mt-1 max-w-sm text-xs text-gray-400">{strategy.thesis}</div>
                       </td>
-                      <td className="px-5 py-4 text-gray-300">{statusLabel(strategy.status)}</td>
+                      <td className="px-5 py-4 text-gray-300">
+                        <div>{statusLabel(strategy.status)}</div>
+                        {strategy.status_detail ? <div className="mt-1 max-w-xs text-xs text-gray-500">{strategy.status_detail}</div> : null}
+                      </td>
+                      <td className="px-5 py-4 text-gray-300">
+                        <div className="capitalize">{strategy.measurement_status?.replaceAll("_", " ") ?? "unknown"}</div>
+                        {strategy.signal_stream ? <div className="mt-1 font-mono text-xs text-gray-500">{strategy.signal_stream}</div> : null}
+                      </td>
                       <td className="px-5 py-4 text-gray-100">
                         {strategy.metrics_1x ? currency.format(strategy.metrics_1x.portfolio_value) : <span className="text-gray-500">—</span>}
                       </td>
@@ -296,7 +263,7 @@ export default async function Home() {
               </div>
               <div>
                 <h2 className="text-xl font-semibold">Signal activity</h2>
-                <p className="text-sm text-gray-400">Cumulative signal growth using the latest exported snapshot.</p>
+                <p className="text-sm text-gray-400">Cumulative signal growth using the latest available dashboard snapshot.</p>
               </div>
             </div>
             <div className="mt-6">
@@ -347,7 +314,7 @@ export default async function Home() {
                 </span>
               ))}
             </div>
-            <p className="mt-3 text-sm text-gray-400">Static JSON is rebuilt from hub snapshots and published via GitHub → Vercel.</p>
+            <p className="mt-3 text-sm text-gray-400">Dashboard reads live Upstash state when configured, then falls back to the baked snapshot.json.</p>
           </article>
         </section>
 

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-07T00:18:55.918242+00:00",
+  "updated_at": "2026-04-07T00:24:19.802586+00:00",
   "strategies": [
     {
       "id": "s1",
@@ -8,12 +8,12 @@
       "status": "live",
       "verdict": "kill",
       "metrics_1x": {
-        "portfolio_value": 9982.83,
-        "return_pct": -0.17,
-        "realized_pnl": -17.17,
-        "trade_count": 78,
-        "win_rate": 0.5256,
-        "avg_r_multiple": -0.0
+        "portfolio_value": 9979.64,
+        "return_pct": -0.2,
+        "realized_pnl": -20.36,
+        "trade_count": 79,
+        "win_rate": 0.519,
+        "avg_r_multiple": -0.01
       }
     },
     {
@@ -36,36 +36,36 @@
   "paper_portfolios": {
     "1x": {
       "leverage": 1,
-      "portfolio_value": 9982.83,
-      "realized_pnl": -17.17,
-      "trade_count": 78,
-      "win_rate": 0.5256,
-      "avg_r_multiple": -0.0,
-      "signals": 375
+      "portfolio_value": 9979.64,
+      "realized_pnl": -20.36,
+      "trade_count": 79,
+      "win_rate": 0.519,
+      "avg_r_multiple": -0.01,
+      "signals": 380
     },
     "5x": {
       "leverage": 5,
-      "portfolio_value": 9908.61,
-      "realized_pnl": -91.39,
-      "trade_count": 78,
-      "win_rate": 0.5256,
-      "avg_r_multiple": -0.02,
-      "signals": 375
+      "portfolio_value": 9892.79,
+      "realized_pnl": -107.21,
+      "trade_count": 79,
+      "win_rate": 0.519,
+      "avg_r_multiple": -0.03,
+      "signals": 380
     },
     "10x": {
       "leverage": 10,
-      "portfolio_value": 9803.59,
-      "realized_pnl": -196.41,
-      "trade_count": 78,
-      "win_rate": 0.5256,
-      "avg_r_multiple": -0.05,
-      "signals": 375
+      "portfolio_value": 9772.28,
+      "realized_pnl": -227.72,
+      "trade_count": 79,
+      "win_rate": 0.519,
+      "avg_r_multiple": -0.06,
+      "signals": 380
     }
   },
   "infrastructure": {
     "running_pods": 12,
-    "last_signal_time": "2026-04-07T00:18:13+00:00",
-    "candles_collected": 14298,
+    "last_signal_time": "2026-04-07T00:24:16+00:00",
+    "candles_collected": 14304,
     "data_sources": [
       "OHLCV",
       "L2 Order Book",

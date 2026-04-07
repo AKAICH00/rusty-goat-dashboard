@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-07T00:24:19.802586+00:00",
+  "updated_at": "2026-04-07T08:00:04.308643+00:00",
   "strategies": [
     {
       "id": "s1",
@@ -8,11 +8,11 @@
       "status": "live",
       "verdict": "kill",
       "metrics_1x": {
-        "portfolio_value": 9979.64,
-        "return_pct": -0.2,
-        "realized_pnl": -20.36,
-        "trade_count": 79,
-        "win_rate": 0.519,
+        "portfolio_value": 9915.61,
+        "return_pct": -0.84,
+        "realized_pnl": -83.96,
+        "trade_count": 166,
+        "win_rate": 0.4578,
         "avg_r_multiple": -0.01
       }
     },
@@ -36,36 +36,36 @@
   "paper_portfolios": {
     "1x": {
       "leverage": 1,
-      "portfolio_value": 9979.64,
-      "realized_pnl": -20.36,
-      "trade_count": 79,
-      "win_rate": 0.519,
+      "portfolio_value": 9915.61,
+      "realized_pnl": -83.96,
+      "trade_count": 166,
+      "win_rate": 0.4578,
       "avg_r_multiple": -0.01,
-      "signals": 380
+      "signals": 830
     },
     "5x": {
       "leverage": 5,
-      "portfolio_value": 9892.79,
-      "realized_pnl": -107.21,
-      "trade_count": 79,
-      "win_rate": 0.519,
-      "avg_r_multiple": -0.03,
-      "signals": 380
+      "portfolio_value": 9576.97,
+      "realized_pnl": -420.94,
+      "trade_count": 166,
+      "win_rate": 0.4578,
+      "avg_r_multiple": -0.05,
+      "signals": 830
     },
     "10x": {
       "leverage": 10,
-      "portfolio_value": 9772.28,
-      "realized_pnl": -227.72,
-      "trade_count": 79,
-      "win_rate": 0.519,
-      "avg_r_multiple": -0.06,
-      "signals": 380
+      "portfolio_value": 9152.38,
+      "realized_pnl": -843.62,
+      "trade_count": 166,
+      "win_rate": 0.4578,
+      "avg_r_multiple": -0.1,
+      "signals": 830
     }
   },
   "infrastructure": {
     "running_pods": 12,
-    "last_signal_time": "2026-04-07T00:24:16+00:00",
-    "candles_collected": 14304,
+    "last_signal_time": "2026-04-07T07:59:36+00:00",
+    "candles_collected": 14744,
     "data_sources": [
       "OHLCV",
       "L2 Order Book",
